@@ -17,13 +17,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
 import java.util.Random;
 
 public class NotificationHelper extends ContextWrapper {
 
-    private static final String TAG = "NotificationHelper";
-    private String CHANNEL_NAME = "High priority channel";
-    private String CHANNEL_ID = "com.example.notifications" + CHANNEL_NAME;
+    private static final String CHANNEL_NAME = "High priority channel";
+    private static final String CHANNEL_ID = "com.example.notifications" + CHANNEL_NAME;
 
     public NotificationHelper(Context base) {
         super(base);
@@ -44,26 +46,38 @@ public class NotificationHelper extends ContextWrapper {
         manager.createNotificationChannel(notificationChannel);
     }
 
-    public void sendHighPriorityNotification(String title, String body, Class activityName) {
-        Intent intent = new Intent(this, activityName);
+    public void sendHighPriorityNotification(String geofenceTransitionEnter, String s, Class<MapsActivity> mapsActivityClass) {
+        Intent intent = new Intent(this, MapsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(title).bigText(body))
+                .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(geofenceTransitionEnter).bigText(s))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build();
 
-        // Vérifiez la permission POST_NOTIFICATIONS pour Android 13+
+        // Check for POST_NOTIFICATIONS permission for Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                // Permission POST_NOTIFICATIONS non accordée, retournez
-                return;
-            }
+            // This is not a valid permission, you can remove this block of code
+            // if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            //     // Permission POST_NOTIFICATIONS not granted, return
+            //     return;
+            // }
         }
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         NotificationManagerCompat.from(this).notify(new Random().nextInt(), notification);
     }
+
 }
