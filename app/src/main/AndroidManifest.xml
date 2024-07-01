@@ -24,21 +24,19 @@
         <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCGapZySNguGbVJy85_jTfsLzZwoTUSkP4"/>
-
-
+            android:value="AIzaSyCGapZySNguGbVJy85_jTfsLzZwoTUSkP4"/> <!-- ou android:value="KEY" si tu veux utiliser cette clé -->
 
         <!-- Maps Activity -->
         <activity
             android:name=".MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN"/>
-            <category android:name="android.intent.category.LAUNCHER"/>
-        </intent-filter>
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
+
         <!-- Geofence Broadcast Receiver -->
         <receiver
             android:name=".GeofenceBroadcastReceiver"
@@ -54,7 +52,6 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
 
     </application>
