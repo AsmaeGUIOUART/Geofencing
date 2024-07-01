@@ -42,18 +42,18 @@ public class NotificationHelper extends ContextWrapper {
         notificationChannel.setDescription("This is the description of the channel.");
         notificationChannel.setLightColor(Color.RED);
         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager manager = getSystemService(NotificationManager.class); // Correction
         manager.createNotificationChannel(notificationChannel);
     }
 
-    public void sendHighPriorityNotification(String geofenceTransitionEnter, String s, Class<MapsActivity> mapsActivityClass) {
+    public void sendHighPriorityNotification(String geofenceTransitionEnter, String s, Class<MapsActivity> mapsActivityClass, List<LatLng> sprayingPoints) {
         Intent intent = new Intent(this, MapsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(geofenceTransitionEnter).bigText(s))
+                .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(geofenceTransitionEnter).bigText(s + " Spraying points: " + sprayingPoints))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build();
@@ -80,4 +80,6 @@ public class NotificationHelper extends ContextWrapper {
         NotificationManagerCompat.from(this).notify(new Random().nextInt(), notification);
     }
 
+
 }
+
